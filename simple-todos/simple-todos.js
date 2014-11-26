@@ -29,13 +29,6 @@ if (Meteor.isClient) {
 
       var text = event.target.text.value;
 
-      // Tasks.insert({
-      //   text: text,
-      //   createdAt: new Date(), // current time
-      //   owner: Meteor.userId(),
-      //   username: Meteor.user().username
-      // }); old insert
-
       //insert
       Meteor.call("addTask", text);
 
@@ -67,8 +60,6 @@ if (Meteor.isClient) {
     },
     "click .delete": function() {
       // Tasks.remove(this._id); // old remove
-
-      // remove
       Meteor.call("deleteTask", this._id);
     },
     "click .toggle-private": function () {
@@ -98,14 +89,14 @@ Meteor.methods({
   },
   deleteTask: function (taskId) {
     var task = Tasks.findOne(taskId)
-    if (task.private && task.owner !== Meteor.userId()) {
+    if (task.private || task.owner !== Meteor.userId()) {
       throw new Meteor.Error('not-authorized');
     }
     Tasks.remove(taskId);
   },
   setChecked: function (taskId, setChecked) {
     var task = Tasks.findOne(taskId);
-    if (task.private && task.owner !== Meteor.userId()) {
+    if (task.private || task.owner !== Meteor.userId()) {
       throw new Meteor.Error('not-authorized');
     }
     Tasks.update(taskId, { $set: { checked: setChecked} });
