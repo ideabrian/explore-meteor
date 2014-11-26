@@ -29,7 +29,9 @@ if (Meteor.isClient) {
 
       Tasks.insert({
         text: text,
-        createdAt: new Date() // current time
+        createdAt: new Date(), // current time
+        owner: Meteor.userId(),
+        username: Meteor.user().username
       });//insert
 
       // Clear form
